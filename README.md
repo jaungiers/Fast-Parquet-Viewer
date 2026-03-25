@@ -30,8 +30,8 @@ Download the latest `ParquetViewer.exe` from the [Releases](../../releases) page
 Requires [Rust](https://rustup.rs/) (stable).
 
 ```sh
-git clone https://github.com/your-username/ParquetViewer
-cd ParquetViewer
+git clone https://github.com/jaungiers/Fast-Parquet-Viewer
+cd Fast-Parquet-Viewer
 cargo build --release
 ```
 
