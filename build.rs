@@ -15,7 +15,7 @@ fn embed_icon() {
     let ico_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("app.ico");
 
     // Load the source PNG
-    let src = image::open("icon.png").expect("icon.png not found");
+    let src = image::open("assets/icon.png").expect("icon.png not found");
 
     let file = std::fs::File::create(&ico_path).unwrap();
     let mut writer = BufWriter::new(file);

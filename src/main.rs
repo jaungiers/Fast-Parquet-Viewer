@@ -26,7 +26,7 @@ fn main() -> eframe::Result {
 }
 
 fn load_icon() -> egui::IconData {
-    let png_bytes = include_bytes!("../icon.png");
+    let png_bytes = include_bytes!("../assets/icon.png");
     match image::load_from_memory(png_bytes) {
         Ok(img) => {
             let img = img.into_rgba8();
