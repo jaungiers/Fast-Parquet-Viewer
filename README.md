@@ -1,4 +1,4 @@
-# Parquet Viewer
+# Fast Parquet Viewer
 
 A fast, lightweight desktop viewer for `.parquet` files, built with Rust and [egui](https://github.com/emilk/egui).
 Has a modern interface that opens extremely fast and can be bound to .parquet files to make it the default app for opening parquet files.
