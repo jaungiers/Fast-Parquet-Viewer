@@ -3,11 +3,11 @@
 A fast, lightweight desktop viewer for `.parquet` files, built with Rust and [egui](https://github.com/emilk/egui).
 Has a modern interface that opens extremely fast and can be bound to .parquet files to make it the default app for opening parquet files.
 
-Windows binary available and compiled under `target/release/ParquetViewer.exe`.
+Windows binary available and compiled under `target/release/FastParquetViewer.exe`.
 
-![Screenshot Dark](screenshot_dark.png)
+![Screenshot Dark](assets/screenshot_dark.png)
 
-![Screenshot Light](screenshot_light.png)
+![Screenshot Light](assets/screenshot_light.png)
 
 ## Features
 
@@ -23,7 +23,7 @@ Windows binary available and compiled under `target/release/ParquetViewer.exe`.
 
 ## Download
 
-Download the latest `ParquetViewer.exe` from the [Releases](../../releases) page. It is a single self-contained executable — no installer or additional files required.
+Download the latest `FastParquetViewer.exe` from the [Releases](../../releases) page. It is a single self-contained executable — no installer or additional files required.
 
 ## Building from source
 
