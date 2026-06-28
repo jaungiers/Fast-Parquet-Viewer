@@ -73,6 +73,7 @@ pub struct ParquetApp {
     search:      String,
     show_search: bool,
     dark_mode:   bool,
+    notice:      Option<String>,
 }
 
 impl ParquetApp {
@@ -88,6 +89,7 @@ impl ParquetApp {
             search:      String::new(),
             show_search: false,
             dark_mode,
+            notice:      None,
         };
         let palette = if dark_mode { Palette::dark() } else { Palette::light() };
         style_egui(&cc.egui_ctx, &palette, dark_mode);
@@ -137,6 +139,28 @@ impl ParquetApp {
                 }
             }
         });
+    }
+
+    /// Register the app for .parquet/.parq and open Windows' Default-apps
+    /// settings so the user can finish setting it as the default handler.
+    #[cfg(windows)]
+    fn set_default_app(&mut self) {
+        match crate::assoc::register() {
+            Ok(()) => {
+                self.notice = Some(
+                    "Registered .parquet and .parq. In the Settings window that opened, set \
+                     Fast Parquet Viewer as the default — or right-click a file, choose \
+                     \"Open with\", then \"Choose another app\"."
+                        .to_string(),
+                );
+                let _ = std::process::Command::new("explorer")
+                    .arg("ms-settings:defaultapps")
+                    .spawn();
+            }
+            Err(e) => {
+                self.notice = Some(format!("Couldn't register file types: {e}"));
+            }
+        }
     }
 }
 
@@ -197,6 +221,18 @@ impl eframe::App for ParquetApp {
                     ui.add_space(4.0);
 
                     ui.label(RichText::new("Ctrl+O  open   Ctrl+F  search").color(palette.muted).size(11.0));
+
+                    #[cfg(windows)]
+                    {
+                        ui.add_space(4.0);
+                        ui.add(egui::Separator::default().vertical().spacing(8.0));
+                        ui.add_space(4.0);
+                        if ui.add(egui::Button::new(
+                            RichText::new("Set as default app…").color(palette.text).size(13.0)
+                        ).frame(false)).clicked() {
+                            self.set_default_app();
+                        }
+                    }
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         let label = if self.dark_mode { "☀ Light" } else { "🌙 Dark" };
@@ -278,10 +314,26 @@ impl eframe::App for ParquetApp {
                         );
                         resp.request_focus();
                         if !self.search.is_empty() {
-                            if ui.small_button("✕").clicked() {
+                            if ui.small_button("×").clicked() {
                                 self.search.clear();
                             }
                         }
+                    });
+                });
+        }
+
+        // Notice strip (file-association feedback)
+        if let Some(msg) = self.notice.clone() {
+            egui::TopBottomPanel::top("notice")
+                .frame(egui::Frame::new().fill(palette.surface2).inner_margin(egui::Margin::symmetric(12, 6)))
+                .show(ctx, |ui| {
+                    ui.horizontal(|ui| {
+                        ui.label(RichText::new(msg).color(palette.text).size(12.0));
+                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                            if ui.small_button("×").clicked() {
+                                self.notice = None;
+                            }
+                        });
                     });
                 });
         }
@@ -420,7 +472,7 @@ fn draw_table(
                             egui::Pos2::new(rect.right() - 14.0, rect.top() + 14.0),
                             egui::Align2::CENTER_CENTER,
                             arrow,
-                            FontId::new(10.0, egui::FontFamily::Proportional),
+                            FontId::new(10.0, egui::FontFamily::Monospace),
                             p.accent,
                         );
                     }
@@ -569,7 +621,7 @@ fn draw_error(ui: &mut egui::Ui, p: &Palette, msg: &str) {
     ui.centered_and_justified(|ui| {
         ui.vertical_centered(|ui| {
             ui.add_space(80.0);
-            ui.label(RichText::new("✕").size(48.0).color(Color32::from_rgb(200, 70, 70)));
+            ui.label(RichText::new("×").size(48.0).color(Color32::from_rgb(200, 70, 70)));
             ui.add_space(12.0);
             ui.label(RichText::new("Failed to open file").size(18.0).color(p.text));
             ui.add_space(8.0);

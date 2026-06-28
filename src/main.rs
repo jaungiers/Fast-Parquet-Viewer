@@ -1,12 +1,30 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
+#[cfg(windows)]
+mod assoc;
 mod loader;
 mod table;
 
 fn main() -> eframe::Result {
     let args: Vec<String> = std::env::args().collect();
-    let initial_file = args.get(1).cloned();
+
+    // File-association management (standalone build, no admin required).
+    #[cfg(windows)]
+    match args.get(1).map(String::as_str) {
+        Some("--register") => {
+            let _ = assoc::register();
+            return Ok(());
+        }
+        Some("--unregister") => {
+            let _ = assoc::unregister();
+            return Ok(());
+        }
+        _ => {}
+    }
+
+    // Treat the first arg as a file path only if it isn't a flag.
+    let initial_file = args.get(1).filter(|a| !a.starts_with("--")).cloned();
 
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()

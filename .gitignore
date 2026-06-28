@@ -1,5 +1,13 @@
 .claude/
+CLAUDE.md
 microsoft-store/
+
+# Rust build output — keep only the shipped release binary committed
+/target/*
+!/target/release/
+/target/release/*
+!/target/release/FastParquetViewer.exe
+*.rs.bk
 
 # Editor
 .vscode/
