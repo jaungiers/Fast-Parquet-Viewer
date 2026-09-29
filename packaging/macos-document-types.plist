@@ -1,0 +1,27 @@
+<!-- Dictionary entries appended to the generated Info.plist by cargo-bundle. -->
+<key>CFBundleDocumentTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeName</key><string>Apache Parquet document</string>
+    <key>CFBundleTypeRole</key><string>Viewer</string>
+    <key>LSHandlerRank</key><string>Alternate</string>
+    <key>LSItemContentTypes</key>
+    <array><string>org.apache.parquet</string></array>
+    <key>CFBundleTypeExtensions</key>
+    <array><string>parquet</string><string>parq</string></array>
+  </dict>
+</array>
+<key>UTImportedTypeDeclarations</key>
+<array>
+  <dict>
+    <key>UTTypeIdentifier</key><string>org.apache.parquet</string>
+    <key>UTTypeDescription</key><string>Apache Parquet document</string>
+    <key>UTTypeConformsTo</key><array><string>public.data</string></array>
+    <key>UTTypeTagSpecification</key>
+    <dict>
+      <key>public.filename-extension</key>
+      <array><string>parquet</string><string>parq</string></array>
+      <key>public.mime-type</key><string>application/vnd.apache.parquet</string>
+    </dict>
+  </dict>
+</array>

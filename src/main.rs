@@ -3,10 +3,17 @@
 mod app;
 #[cfg(windows)]
 mod assoc;
+#[cfg(target_os = "macos")]
+mod macos;
 mod loader;
 mod table;
 
 fn main() -> eframe::Result {
+    // Observe AppKit startup before the event loop so the document handler is
+    // registered at will-finish-launching, before Finder sends its first file.
+    #[cfg(target_os = "macos")]
+    let _document_handler = macos::DocumentHandler::install();
+
     let args: Vec<String> = std::env::args().collect();
 
     // File-association management (standalone build, no admin required).

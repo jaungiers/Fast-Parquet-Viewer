@@ -78,6 +78,9 @@ pub struct ParquetApp {
 
 impl ParquetApp {
     pub fn new(cc: &eframe::CreationContext<'_>, initial_file: Option<String>) -> Self {
+        #[cfg(target_os = "macos")]
+        crate::macos::set_context(&cc.egui_ctx);
+
         let dark_mode = cc.storage
             .and_then(|s| s.get_string("dark_mode"))
             .map(|v| v != "false")
@@ -171,6 +174,14 @@ impl eframe::App for ParquetApp {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let palette = if self.dark_mode { Palette::dark() } else { Palette::light() };
+
+        #[cfg(target_os = "macos")]
+        if let Some(path) = crate::macos::take_pending_file() {
+            self.start_load(path);
+            ctx.send_viewport_cmd(egui::ViewportCommand::Visible(true));
+            ctx.send_viewport_cmd(egui::ViewportCommand::Minimized(false));
+            ctx.send_viewport_cmd(egui::ViewportCommand::Focus);
+        }
 
         self.poll_loader(ctx);
         self.handle_dropped_files(ctx);

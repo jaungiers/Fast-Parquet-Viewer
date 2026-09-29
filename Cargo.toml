@@ -2,6 +2,7 @@
 name = "parquet_viewer"
 version = "1.3.0"
 edition = "2021"
+description = "A fast, lightweight Parquet file viewer"
 
 [[bin]]
 name = "FastParquetViewer"
@@ -16,6 +17,11 @@ parquet = { version = "54", default-features = false, features = ["arrow", "snap
 rfd = "0.15"
 pollster = "0.4"
 image = { version = "0.25", default-features = false, features = ["png"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSApplication"] }
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSAppleEventDescriptor", "NSAppleEventManager", "NSNotification", "NSString", "NSURL"] }
 
 [target.'cfg(windows)'.dependencies]
 winreg = "0.52"
@@ -34,3 +40,19 @@ strip = true
 
 [profile.release.package."*"]
 opt-level = 3
+
+[package.metadata.bundle.bin.FastParquetViewer]
+name = "Fast Parquet Viewer"
+identifier = "io.github.jaungiers.fast-parquet-viewer"
+icon = ["assets/icon.png"]
+category = "Developer Tool"
+short_description = "A fast, lightweight Parquet file viewer"
+
+[package.metadata.bundle.bin.FastParquetViewer.osx]
+info_plist_exts = ["packaging/macos-document-types.plist"]
+
+# AppKit lifecycle tests must execute on the process's main thread.
+[[test]]
+name = "macos_open_documents"
+path = "tests/macos_open_documents.rs"
+harness = false
